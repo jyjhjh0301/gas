@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c2c">
+  <meta name="description" content="가스사용시설안전관리자 기출복원 200문제 학습">
+  <title>가스사용시설안전관리자 문제은행</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23101c2c'/%3E%3Cpath d='M33 8c3 11-5 15 1 23 4-3 6-8 6-12 13 11 17 28 6 36-11 9-29 4-33-8-4-13 8-21 10-27 2 9 0 13-2 18 8-5 10-13 12-30Z' fill='%23f7b955'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">G</div>
+      <div class="brand-copy"><strong>가스사용시설안전관리자</strong><span>기출복원 문제은행</span></div>
+      <div class="top-count" id="top-count">200문제</div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="학습 범위 선택">
+        <div class="side-heading"><span>학습 범위</span><small id="progress-total">0 / 200 완료</small></div>
+        <div class="progress-track" aria-hidden="true"><div id="progress-bar"></div></div>
+        <div class="mode-list" role="group" aria-label="학습 방식">
+          <button type="button" class="mode-btn active" data-mode="ordered">순서대로 풀기</button>
+          <button type="button" class="mode-btn" data-mode="random">전체 랜덤</button>
+          <button type="button" class="mode-btn" data-mode="wrong">오답만 풀기 <span id="wrong-count">0</span></button>
+        </div>
+        <div id="chapter-list" class="chapter-list"></div>
+        <p class="storage-note">풀이 기록은 이 기기의 브라우저에 저장됩니다.</p>
+      </aside>
+
+      <section class="workspace" aria-label="문제 풀이">
+        <div id="loading" class="loading">문제은행을 불러오는 중…</div>
+        <div id="study" hidden>
+          <div class="study-top">
+            <div><div class="eyebrow" id="scope-label"></div><h1 id="scope-title"></h1></div>
+            <div class="study-counter" id="study-counter"></div>
+          </div>
+          <div class="jump-row"><label for="question-select">문제 이동</label><select id="question-select"></select></div>
+          <article class="question-card" aria-live="polite">
+            <div class="question-meta"><span class="question-number" id="question-number"></span><span id="question-section"></span></div>
+            <h2 id="question-text"></h2>
+            <div class="choice-list" id="choices" role="group" aria-label="답안 선택"></div>
+            <div class="answer-panel" id="answer-panel" hidden></div>
+            <div class="explanation" id="explanation" hidden></div>
+            <div class="question-actions">
+              <button type="button" class="secondary-btn" id="prev-btn">이전 문제</button>
+              <div class="action-right">
+                <button type="button" class="primary-btn" id="check-btn" disabled>정답 확인</button>
+                <button type="button" class="secondary-btn" id="explain-btn" hidden>해설 보기</button>
+                <button type="button" class="primary-btn" id="next-btn" hidden>다음 문제</button>
+              </div>
+            </div>
+          </article>
+          <p class="source-note">첨부된 기출복원 자료를 옮겼습니다. 법령과 해설의 최신성은 별도로 검증되지 않았습니다.</p>
+        </div>
+        <div id="empty" class="empty-state" hidden><h2>아직 오답이 없어요</h2><p>문제를 풀다가 틀리면 이곳에서 다시 풀 수 있습니다.</p><button type="button" class="primary-btn" id="empty-back">전체 문제 풀기</button></div>
+        <div id="error" class="empty-state" hidden><h2>문제를 불러오지 못했어요</h2><p>파일이 모두 올라갔는지 확인하고 새로고침해 주세요.</p></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,5 +1,5 @@
 const $ = id => document.getElementById(id);
-const STORAGE_KEY = 'gas-study-v5';
+const STORAGE_KEY = 'gas-study-v6';
 let bank, state, ids = [], cursor = 0, selected = null, revealed = false, explanationOpen = false;
 const CIRCLED = ['①', '②', '③', '④'];
 const qById = id => bank.questions[id - 1];
@@ -29,7 +29,7 @@ function makeSet() {
 }
 function readState() {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('gas-study-v4') || localStorage.getItem('gas-study-v3') || localStorage.getItem('gas-study-v2') || localStorage.getItem('gas-study-v1') || '{}');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('gas-study-v5') || localStorage.getItem('gas-study-v4') || localStorage.getItem('gas-study-v3') || localStorage.getItem('gas-study-v2') || localStorage.getItem('gas-study-v1') || '{}');
     return { mode: 'ordered', scope: 'all', subjects: [1, 2, 3, 4], shuffleChoices: false, practiceOrders: {}, seen: {}, wrong: {}, mockSets: [], currentSet: 0, ...saved };
   } catch { return { mode: 'ordered', scope: 'all', subjects: [1, 2, 3, 4], shuffleChoices: false, practiceOrders: {}, seen: {}, wrong: {}, mockSets: [], currentSet: 0 }; }
 }
@@ -261,7 +261,20 @@ $('prev-btn').onclick = () => { if (cursor > 0) { cursor--; render(); window.scr
 $('question-select').onchange = e => { cursor = Number(e.target.value); render(); };
 $('empty-back').onclick = () => { state.scope = 'all'; changeMode('ordered'); };
 fetch('./가스사용시설안전관리자_문제은행.json').then(r => { if (!r.ok) throw Error(r.status); return r.json(); }).then(data => {
+  if (data.questions.length !== 200 || data.questions.some(q => q.choices.length !== 4 || q.choices.some((o, i) => o.label !== CIRCLED[i]) || !CIRCLED.includes(q.answer))) throw Error('문제 데이터의 보기 번호가 올바르지 않습니다.');
   bank = data; state = readState();
+  let needsCorrectionMigration = false;
+  try { needsCorrectionMigration = !localStorage.getItem(STORAGE_KEY); } catch {}
+  if (needsCorrectionMigration) {
+    // The old Q35 had two ④ choices; its saved result could not distinguish them.
+    delete state.seen[35]; delete state.wrong[35];
+    delete state.practiceOrders?.[35]; delete state.practiceOrders?.[62];
+    if (Array.isArray(state.mockSets)) state.mockSets.forEach(set => {
+      delete set.choiceOrders?.[35]; delete set.choiceOrders?.[62];
+      if (set.ids?.includes(35)) { delete set.answers?.[35]; set.submitted = false; }
+      if (set.ids?.includes(62) && set.answers?.[62] === '④') { delete set.answers[62]; set.submitted = false; }
+    });
+  }
   state.shuffleChoices = !!state.shuffleChoices;
   if (!state.practiceOrders || typeof state.practiceOrders !== 'object') state.practiceOrders = {};
   try { document.documentElement.dataset.theme = localStorage.getItem('gas-theme') === 'dark' ? 'dark' : ''; } catch {}
